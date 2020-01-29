@@ -2,8 +2,12 @@ version: '2'
 services:
   python:
     image: registry.gitlab.com/mycompany/myproject/python:dev
+    # Without "volumns", the contents of the python subdirectory ("/code" in Dockerfile) will be added to the container.
+    # If a change is made on the host machine, the container has to be rebuild before we see those changes in the container.
+    # But with "volumns", any changes you make will immediately be reflected inside the container.
     volumes:
       - ./python/:/code
+    # here watchmedo is a part of "watchdog" package, which rebuild (execute "mypackage/run.py") automatically if any change is made in "*.py".
     entrypoint: watchmedo auto-restart --recursive --pattern="*.py" --directory="." python mypackage/run.py
     depends_on:
       - postgres
@@ -16,10 +20,12 @@ services:
       - POSTGRES_HOST=postgres
 
   python-tests:
-    image: registry.gitlab.com/mycompany/myproject/python:dev
+    image: registry.gitlab.com/mycompany/myproject/python:dev # the same image with python -> the image will only be built once.
     volumes:
       - ./python/:/code
+    # this entrypoint means that all unittest (written in pytest) will be triggered whenever there is any modification in "*.py".
     entrypoint: watchmedo auto-restart --recursive --pattern="*.py" --directory="." pytest
+    # "depend_on" notices to docker-composer to build "python" service first before building "python-tests" service.
     depends_on:
       - python
 
@@ -40,10 +46,12 @@ services:
 
   postgres:
     image: postgres:9.6
+    # This hard-coded env variables can be passed from an external source in the production situation.
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=myproject
+    # map Postgres DB data to a location on your host machine
     volumes:
       - /data/aedspy/postgres:/var/lib/postgresql/data
 
