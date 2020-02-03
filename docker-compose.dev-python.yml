@@ -13,11 +13,11 @@ services:
     #   - postgres
     # links:
     #   - postgres
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=myproject
-      - POSTGRES_HOST=postgres
+    # environment:
+    #   - POSTGRES_USER=user
+    #   - POSTGRES_PASSWORD=password
+    #   - POSTGRES_DB=myproject
+    #   - POSTGRES_HOST=postgres
 
   python-tests:
     image: registry.gitlab.com/mycompany/myproject/python:dev # the same image with python -> the image will only be built once.
