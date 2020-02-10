@@ -9,3 +9,6 @@ article](https://medium.com/@Empanado/efficient-development-with-docker-and-dock
 
 ### Instruction on Makefile
 https://opensource.com/article/18/8/what-how-makefile
+
+How to use:
+- `make help`: to see all commands specified in Makefile
